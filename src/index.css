@@ -3,117 +3,202 @@
 @tailwind utilities;
 
 /* =====================================================
-   KEYFRAMES
-   Must live outside @layer so browsers always find them.
-   Tailwind's animation utilities reference these names.
+   CSS CUSTOM PROPERTIES — Theme tokens
+   Dark mode is the default. Light mode overrides
+   these vars when .dark is NOT on <html>.
    ===================================================== */
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0); }
+:root {
+  /* Dark theme (default) */
+  --color-bg:       #0a0a0f;
+  --color-bg2:      #0f0f1a;
+  --color-bg3:      #13131f;
+  --color-surface:  #1a1a2e;
+  --color-surface2: #16213e;
+
+  /* Text */
+  --color-text-primary:   #e2e8f0;
+  --color-text-secondary: rgba(226,232,240,0.6);
+  --color-text-muted:     rgba(226,232,240,0.3);
+
+  /* Borders */
+  --color-border:         rgba(255,255,255,0.06);
+  --color-border-hover:   rgba(255,255,255,0.12);
+
+  /* Navbar — scrolled/open state */
+  --nav-bg-scrolled:  rgba(10,10,15,0.92);
+  --nav-link-hover:   #e2e8f0;
+
+  /* Avatar floating chips */
+  --chip-bg:          rgba(8,8,18,0.88);
+  --chip-bg-solid:    rgba(8,8,18,0.95);
+  --chip-text:        rgba(226,232,240,0.9);
+  --chip-vignette:    rgba(8,8,18,0.75);
+
+  /* Scrollbar */
+  --color-scrollbar-track: #0a0a0f;
+  --color-scrollbar-thumb: #6366f1;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-8px); }
+/* Light theme — applied when .light is on <html> */
+html.light {
+  --color-bg:       #f8f8fc;
+  --color-bg2:      #f0f0f8;
+  --color-bg3:      #e8e8f4;
+  --color-surface:  #ffffff;
+  --color-surface2: #f2f2fa;
+
+  --color-text-primary:   #0f0f1a;
+  --color-text-secondary: rgba(15,15,26,0.65);
+  --color-text-muted:     rgba(15,15,26,0.35);
+
+  --color-border:         rgba(0,0,0,0.07);
+  --color-border-hover:   rgba(0,0,0,0.14);
+
+  /* Navbar — light scrolled state: white frosted glass */
+  --nav-bg-scrolled:  rgba(248,248,252,0.92);
+  --nav-link-hover:   #0f0f1a;
+
+  /* Avatar floating chips — light mode: white frosted glass */
+  --chip-bg:          rgba(255,255,255,0.88);
+  --chip-bg-solid:    rgba(255,255,255,0.96);
+  --chip-text:        rgba(15,15,26,0.85);
+  --chip-vignette:    rgba(240,240,248,0.75);
+
+  --color-scrollbar-track: #f0f0f8;
+  --color-scrollbar-thumb: #6366f1;
 }
 
-@keyframes pulse2 {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.5; transform: scale(1.4); }
-}
+/* =====================================================
+   KEYFRAMES
+   ===================================================== */
+@keyframes fadeUp  { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+@keyframes float   { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+@keyframes pulse2  { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }
+@keyframes drift1  { 0%,100% { transform:translate(0,0) scale(1); } 33% { transform:translate(80px,60px) scale(1.1); } 66% { transform:translate(-40px,80px) scale(0.9); } }
+@keyframes drift2  { 0%,100% { transform:translate(0,0) scale(1); } 33% { transform:translate(-60px,-80px) scale(1.2); } 66% { transform:translate(40px,-40px) scale(0.8); } }
+@keyframes spin-slow    { from { transform:rotate(0deg); }   to { transform:rotate(360deg); } }
+@keyframes spin-reverse { from { transform:rotate(360deg); } to { transform:rotate(0deg); } }
+@keyframes orbit    { from { transform:rotate(0deg) translateX(90px) rotate(0deg); }   to { transform:rotate(360deg) translateX(90px) rotate(-360deg); } }
+@keyframes orbit-sm { from { transform:rotate(0deg) translateX(68px) rotate(0deg); }   to { transform:rotate(360deg) translateX(68px) rotate(-360deg); } }
+@keyframes shimmer  { 0% { background-position:-200% center; } 100% { background-position:200% center; } }
+@keyframes breathe  { 0%,100% { transform:scale(1); opacity:0.6; } 50% { transform:scale(1.08); opacity:1; } }
+@keyframes scan     { 0% { top:0%; } 100% { top:100%; } }
 
-@keyframes drift1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%       { transform: translate(80px, 60px) scale(1.1); }
-  66%       { transform: translate(-40px, 80px) scale(0.9); }
-}
+/* Theme toggle icon swap */
+@keyframes icon-in  { from { opacity:0; transform:scale(0.6) rotate(-30deg); } to { opacity:1; transform:scale(1) rotate(0deg); } }
 
-@keyframes drift2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%       { transform: translate(-60px, -80px) scale(1.2); }
-  66%       { transform: translate(40px, -40px) scale(0.8); }
-}
-
+/* =====================================================
+   BASE STYLES
+   ===================================================== */
 @layer base {
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+
   body {
-    background-color: #0a0a0f;
-    color: #e2e8f0;
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
     font-family: 'DM Sans', sans-serif;
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: #0a0a0f; }
-  ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 3px; }
+
+  ::-webkit-scrollbar       { width:5px; }
+  ::-webkit-scrollbar-track { background: var(--color-scrollbar-track); }
+  ::-webkit-scrollbar-thumb { background: var(--color-scrollbar-thumb); border-radius:3px; }
 }
 
+/* =====================================================
+   COMPONENT UTILITIES
+   ===================================================== */
 @layer components {
-  /* Noise texture */
   .noise-overlay {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
   }
 
-  /* Gradient text utility */
   .gradient-text {
     @apply bg-gradient-to-r from-accent via-accent2 to-accent3 bg-clip-text text-transparent;
   }
 
-  /* Section eyebrow */
-  .eyebrow::before { content: '// '; color: #64748b; }
+  .eyebrow::before { content:'// '; color:#64748b; }
 
-  /* Card surface */
-  .card {
-    @apply bg-surface border border-white/5 rounded-2xl;
-  }
+  .card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:1rem; }
 
-  /* Accent top border on cards */
-  .card-accent::before {
-    content: '';
-    @apply absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent to-accent2 rounded-t-2xl;
-  }
-
-  /* Skill tag variants */
-  .tag-indigo { @apply bg-accent/10 border border-accent/20 text-accent; }
-  .tag-cyan   { @apply bg-accent2/10 border border-accent2/20 text-accent2; }
-  .tag-violet { @apply bg-accent3/10 border border-accent3/20 text-accent3; }
-  .tag-green  { @apply bg-emerald-400/10 border border-emerald-400/20 text-emerald-400; }
+  /* Skill tag variants — work in both themes */
+  .tag-indigo { @apply bg-accent/10 border border-accent/25 text-accent; }
+  .tag-cyan   { @apply bg-accent2/10 border border-accent2/25 text-accent2; }
+  .tag-violet { @apply bg-accent3/10 border border-accent3/25 text-accent3; }
+  .tag-green  { @apply bg-emerald-500/10 border border-emerald-500/25 text-emerald-500; }
 }
 
-/* ── Avatar-specific animations ── */
+/* =====================================================
+   LIGHT MODE OVERRIDES — COMPREHENSIVE
+   =====================================================
+   Tailwind generates opacity-based color utilities like
+   text-white/60 as `color: rgb(255 255 255 / 0.6)` at
+   build time — they don't respond to CSS variable changes.
+   We must explicitly override every variant used in the app.
 
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+   Audit-sourced: covers every text-white/, bg-white/,
+   border-white/, and placeholder: variant found in src/.
+   ===================================================== */
+
+/* ── Backgrounds ── */
+html.light .bg-bg         { background-color: var(--color-bg)       !important; }
+html.light .bg-bg2        { background-color: var(--color-bg2)      !important; }
+html.light .bg-bg3        { background-color: var(--color-bg3)      !important; }
+html.light .bg-surface    { background-color: var(--color-surface)  !important; }
+html.light .bg-surface2   { background-color: var(--color-surface2) !important; }
+
+/* Input / card inner backgrounds */
+html.light .bg-white\/\[0\.03\] { background-color: rgba(0,0,0,0.03) !important; }
+html.light .bg-white\/5         { background-color: rgba(0,0,0,0.04) !important; }
+html.light .bg-white\/10        { background-color: rgba(0,0,0,0.06) !important; }
+
+/* ── Borders ── */
+html.light .border-white\/5     { border-color: rgba(0,0,0,0.07) !important; }
+html.light .border-white\/8     { border-color: rgba(0,0,0,0.08) !important; }
+html.light .border-white\/10    { border-color: rgba(0,0,0,0.10) !important; }
+html.light .border-white\/15    { border-color: rgba(0,0,0,0.15) !important; }
+
+/* ── Text — every opacity variant used in the codebase ── */
+html.light .text-white          { color: rgba(15,15,26,1.00) !important; }
+html.light .text-white\/80      { color: rgba(15,15,26,0.85) !important; }
+html.light .text-white\/70      { color: rgba(15,15,26,0.75) !important; }
+html.light .text-white\/60      { color: rgba(15,15,26,0.65) !important; }
+html.light .text-white\/55      { color: rgba(15,15,26,0.60) !important; }
+html.light .text-white\/50      { color: rgba(15,15,26,0.55) !important; }
+html.light .text-white\/40      { color: rgba(15,15,26,0.45) !important; }
+html.light .text-white\/30      { color: rgba(15,15,26,0.35) !important; }
+html.light .text-white\/25      { color: rgba(15,15,26,0.28) !important; }
+html.light .text-white\/20      { color: rgba(15,15,26,0.22) !important; }
+html.light .text-white\/15      { color: rgba(15,15,26,0.18) !important; }
+
+/* ── Placeholder text in form inputs ── */
+html.light .placeholder\:text-white\/25::placeholder { color: rgba(15,15,26,0.30) !important; }
+html.light .placeholder\:text-white\/20::placeholder { color: rgba(15,15,26,0.25) !important; }
+
+/* ── hover: variants on interactive text ── */
+html.light .hover\:text-white:hover { color: rgba(15,15,26,1.00) !important; }
+
+/* ── Section dividers / decorative lines ── */
+html.light .border-white\/5  { border-color: rgba(0,0,0,0.07) !important; }
+
+/* ── Cards: inset border-top accent lines use white/5 ── */
+html.light .divide-white\/5  > * + * { border-color: rgba(0,0,0,0.07) !important; }
+
+/* ── Input focus ring ── */
+html.light input:focus,
+html.light textarea:focus {
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.15) !important;
 }
 
-@keyframes spin-reverse {
-  from { transform: rotate(360deg); }
-  to   { transform: rotate(0deg); }
-}
+/* ── Ambient background blobs — subtle in light mode ── */
+html.light .fixed.inset-0.pointer-events-none { opacity: 0.2 !important; }
 
-@keyframes orbit {
-  from { transform: rotate(0deg) translateX(90px) rotate(0deg); }
-  to   { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
-}
+/* ── Noise overlay — invisible in light mode ── */
+html.light .noise-overlay { opacity: 0 !important; }
 
-@keyframes orbit-sm {
-  from { transform: rotate(0deg) translateX(68px) rotate(0deg); }
-  to   { transform: rotate(360deg) translateX(68px) rotate(-360deg); }
-}
-
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position:  200% center; }
-}
-
-@keyframes breathe {
-  0%, 100% { transform: scale(1);    opacity: 0.6; }
-  50%       { transform: scale(1.08); opacity: 1;   }
-}
-
-@keyframes scan {
-  0%   { top: 0%; }
-  100% { top: 100%; }
-}
+/* ── Scrollbar ── */
+html.light ::-webkit-scrollbar-track { background: var(--color-scrollbar-track); }
+html.light ::-webkit-scrollbar-thumb { background: #6366f1; }
