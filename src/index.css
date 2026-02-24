@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =====================================================
+   KEYFRAMES
+   Must live outside @layer so browsers always find them.
+   Tailwind's animation utilities reference these names.
+   ===================================================== */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes pulse2 {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.4); }
+}
+
+@keyframes drift1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(80px, 60px) scale(1.1); }
+  66%       { transform: translate(-40px, 80px) scale(0.9); }
+}
+
+@keyframes drift2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-60px, -80px) scale(1.2); }
+  66%       { transform: translate(40px, -40px) scale(0.8); }
+}
+
+@layer base {
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: #0a0a0f;
+    color: #e2e8f0;
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #0a0a0f; }
+  ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 3px; }
+}
+
+@layer components {
+  /* Noise texture */
+  .noise-overlay {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  /* Gradient text utility */
+  .gradient-text {
+    @apply bg-gradient-to-r from-accent via-accent2 to-accent3 bg-clip-text text-transparent;
+  }
+
+  /* Section eyebrow */
+  .eyebrow::before { content: '// '; color: #64748b; }
+
+  /* Card surface */
+  .card {
+    @apply bg-surface border border-white/5 rounded-2xl;
+  }
+
+  /* Accent top border on cards */
+  .card-accent::before {
+    content: '';
+    @apply absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent to-accent2 rounded-t-2xl;
+  }
+
+  /* Skill tag variants */
+  .tag-indigo { @apply bg-accent/10 border border-accent/20 text-accent; }
+  .tag-cyan   { @apply bg-accent2/10 border border-accent2/20 text-accent2; }
+  .tag-violet { @apply bg-accent3/10 border border-accent3/20 text-accent3; }
+  .tag-green  { @apply bg-emerald-400/10 border border-emerald-400/20 text-emerald-400; }
+}
+
+/* ── Avatar-specific animations ── */
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(90px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
+}
+
+@keyframes orbit-sm {
+  from { transform: rotate(0deg) translateX(68px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(68px) rotate(-360deg); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1);    opacity: 0.6; }
+  50%       { transform: scale(1.08); opacity: 1;   }
+}
+
+@keyframes scan {
+  0%   { top: 0%; }
+  100% { top: 100%; }
+}
